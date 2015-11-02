@@ -9,8 +9,9 @@
 #import "ViewController.h"
 @import AVFoundation;
 
-@interface ViewController () <AVCaptureMetadataOutputObjectsDelegate>
+@interface ViewController () <AVCaptureMetadataOutputObjectsDelegate,UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *messageLabel;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong,nonatomic) NSDictionary *information;
 @property (strong,nonatomic) NSDictionary *products;
 @property (strong,nonatomic) NSArray *ingredients;
@@ -26,7 +27,9 @@
 {
     [super viewDidLoad];
     
- 
+    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.hidden = YES;
+    
     self.information = [NSDictionary new];
     self.ingredients = [NSArray new];
     
@@ -68,6 +71,7 @@
     qrCodeFrameView.layer.borderWidth = 2.0;
     [self.view addSubview:qrCodeFrameView];
     [self.view bringSubviewToFront:qrCodeFrameView];
+    [self.view bringSubviewToFront:self.tableView];
     
     
     
@@ -104,7 +108,9 @@
                 self.information = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
                 self.ingredients = [[self.information objectForKey:@"product"] objectForKey:@"ingredients_tags"];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                        [self printIngredients];
+                        //[self printIngredients];
+                    self.tableView.hidden = NO;
+                    [self.tableView reloadData];
                 });
                 
             }];
@@ -122,14 +128,14 @@
     for (NSString *ingredient in self.ingredients) {
         [ingredientList appendFormat:@" %@",ingredient];
     }
-    if ([ingredientList containsString:self.alergicIngredient]) {
+//    if ([ingredientList containsString:self.alergicIngredient]) {
         //NSLog(@"This product contains %@!",self.alergicIngredient);
         UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Warning" message:[NSString stringWithFormat:@"This product contains %@!",self.alergicIngredient] preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
         [controller addAction:action];
         [self presentViewController:controller animated:YES completion:nil];
-    }
-    
+//    }
+    self.tableView.hidden = NO;
     self.messageLabel.text = ingredientList;
 }
 
@@ -137,6 +143,19 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return [self.ingredients count];
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    cell.textLabel.text = [self.ingredients objectAtIndex:indexPath.row];
+    cell.backgroundColor = [UIColor clearColor];
+    cell.textLabel.textColor = [UIColor lightTextColor];
+    
+    return cell;
 }
 
 @end
