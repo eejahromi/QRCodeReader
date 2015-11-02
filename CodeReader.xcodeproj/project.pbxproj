@@ -13,6 +13,7 @@
 		B2AD2D761BE5D528006EFD53 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2AD2D741BE5D528006EFD53 /* Main.storyboard */; };
 		B2AD2D781BE5D528006EFD53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2AD2D771BE5D528006EFD53 /* Assets.xcassets */; };
 		B2AD2D7B1BE5D528006EFD53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2AD2D791BE5D528006EFD53 /* LaunchScreen.storyboard */; };
+		B2AD2D841BE7186C006EFD53 /* IntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2AD2D831BE7186C006EFD53 /* IntroViewController.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		B2AD2D771BE5D528006EFD53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B2AD2D7A1BE5D528006EFD53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B2AD2D7C1BE5D528006EFD53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B2AD2D821BE7186C006EFD53 /* IntroViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroViewController.h; sourceTree = "<group>"; };
+		B2AD2D831BE7186C006EFD53 /* IntroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +63,8 @@
 			children = (
 				B2AD2D6E1BE5D528006EFD53 /* AppDelegate.h */,
 				B2AD2D6F1BE5D528006EFD53 /* AppDelegate.m */,
+				B2AD2D821BE7186C006EFD53 /* IntroViewController.h */,
+				B2AD2D831BE7186C006EFD53 /* IntroViewController.m */,
 				B2AD2D711BE5D528006EFD53 /* ViewController.h */,
 				B2AD2D721BE5D528006EFD53 /* ViewController.m */,
 				B2AD2D741BE5D528006EFD53 /* Main.storyboard */,
@@ -152,6 +157,7 @@
 				B2AD2D731BE5D528006EFD53 /* ViewController.m in Sources */,
 				B2AD2D701BE5D528006EFD53 /* AppDelegate.m in Sources */,
 				B2AD2D6D1BE5D528006EFD53 /* main.m in Sources */,
+				B2AD2D841BE7186C006EFD53 /* IntroViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,6 +304,7 @@
 				B2AD2D811BE5D528006EFD53 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

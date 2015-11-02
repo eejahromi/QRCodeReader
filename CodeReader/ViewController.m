@@ -101,11 +101,8 @@
             NSURL *url = [NSURL URLWithString:urlString];
             
             NSURLSessionTask *task = [[NSURLSession sharedSession]dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                //NSLog(@"%@",data);
                 self.information = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
                 self.ingredients = [[self.information objectForKey:@"product"] objectForKey:@"ingredients_tags"];
-                //NSLog(@"%@",self.information);
-                //NSLog(@"%lu",(unsigned long)[self.ingredients count]);
                 dispatch_async(dispatch_get_main_queue(), ^{
                         [self printIngredients];
                 });
@@ -125,7 +122,14 @@
     for (NSString *ingredient in self.ingredients) {
         [ingredientList appendFormat:@" %@",ingredient];
     }
-    //NSLog(@"%@",ingredientList);
+    if ([ingredientList containsString:self.alergicIngredient]) {
+        //NSLog(@"This product contains %@!",self.alergicIngredient);
+        UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Warning" message:[NSString stringWithFormat:@"This product contains %@!",self.alergicIngredient] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+        [controller addAction:action];
+        [self presentViewController:controller animated:YES completion:nil];
+    }
+    
     self.messageLabel.text = ingredientList;
 }
 

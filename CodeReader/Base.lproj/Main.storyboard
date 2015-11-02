@@ -5,10 +5,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Intro View Controller-->
         <scene sceneID="9vr-lA-kPW">
             <objects>
-                <viewController id="4jR-RO-wVQ" sceneMemberID="viewController">
+                <viewController id="4jR-RO-wVQ" customClass="IntroViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="BdO-eM-CL7"/>
                         <viewControllerLayoutGuide type="bottom" id="Vrc-oq-CZo"/>
@@ -20,7 +20,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="6mF-mX-eKX">
                                 <rect key="frame" x="20" y="61" width="560" height="61"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Type in any ingredients:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NVf-00-fNf">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Type in any ingredient:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NVf-00-fNf">
                                         <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="560" id="Oav-OZ-Rki"/>
@@ -53,7 +53,7 @@
                                 <rect key="frame" x="282" y="159" width="37" height="30"/>
                                 <state key="normal" title="Done"/>
                                 <connections>
-                                    <segue destination="BYZ-38-t0r" kind="show" identifier="ShowScanner" id="j09-Eb-ijz"/>
+                                    <action selector="doneButtonPressed:" destination="4jR-RO-wVQ" eventType="touchUpInside" id="b0O-Qh-lSy"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -66,6 +66,10 @@
                             <constraint firstItem="6mF-mX-eKX" firstAttribute="top" secondItem="BdO-eM-CL7" secondAttribute="bottom" constant="41" id="TdY-Pv-eS7"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="ingredientsTextField" destination="FR1-cq-8jK" id="fZa-9F-NAL"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="ShowScanner" id="vry-Pt-Jlb"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="v6f-yf-3x8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
