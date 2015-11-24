@@ -21,6 +21,7 @@
     AVCaptureSession *captureSession;
     AVCaptureVideoPreviewLayer *videoPreviewLayer;
     UIView *qrCodeFrameView;
+    BOOL tableViewShowing;
 }
 
 - (void)viewDidLoad
@@ -73,8 +74,39 @@
     [self.view bringSubviewToFront:qrCodeFrameView];
     [self.view bringSubviewToFront:self.tableView];
     
+    [self.messageLabel setUserInteractionEnabled:YES];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(reloadTable:)];
+    tap.numberOfTapsRequired = 2;
+    [self.messageLabel addGestureRecognizer:tap];
+    
+    UITapGestureRecognizer *tableDismissTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dismissTable:)];
+    tableDismissTap.numberOfTapsRequired = 1;
+    [self.messageLabel addGestureRecognizer:tableDismissTap];
+    
+}
+
+-(void)reloadTable:(UIGestureRecognizer *)sender{
+    tableViewShowing = YES;
+    self.tableView.frame = CGRectMake(-200.0, 0.0, 200.0, self.view.bounds.size.height - 50);
+    self.tableView.hidden = NO;
+    [UIView animateWithDuration:0.4 animations:^{
+        self.tableView.frame = CGRectMake(0.0, 0.0, 200.0, self.view.bounds.size.height - 50);
+    } completion:^(BOOL finished) {
+        [self.tableView reloadData];
+    }];
     
     
+    
+}
+
+-(void)dismissTable:(UIGestureRecognizer *)sender{
+    if (tableViewShowing) {
+        [UIView animateWithDuration:0.4 animations:^{
+            self.tableView.frame = CGRectMake(-200.0, 0.0, 200.0, self.view.bounds.size.height - 50);
+        } completion:^(BOOL finished) {
+            tableViewShowing = NO;
+        }];
+    }
 }
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
@@ -147,12 +179,12 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [self.ingredients count];
+    return 7;//[self.ingredients count];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-    cell.textLabel.text = [self.ingredients objectAtIndex:indexPath.row];
+    cell.textLabel.text = @"Test";//[self.ingredients objectAtIndex:indexPath.row];
     cell.backgroundColor = [UIColor clearColor];
     cell.textLabel.textColor = [UIColor lightTextColor];
     
