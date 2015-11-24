@@ -101,7 +101,7 @@
             //NSLog(@"%@",[metadataObj stringValue]);
             
             NSString *urlString = [NSString stringWithFormat:@"http://world.openfoodfacts.org/api/v0/product/%@.json",[metadataObj stringValue]];
-            
+            NSLog(@"%@",urlString);
             NSURL *url = [NSURL URLWithString:urlString];
             
             NSURLSessionTask *task = [[NSURLSession sharedSession]dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
@@ -119,7 +119,7 @@
         }
 //    }
     
-    
+    NSLog(@"%ld",self.information.count);
     
 }
 
@@ -127,6 +127,7 @@
     NSMutableString *ingredientList = [[NSMutableString alloc]init];
     for (NSString *ingredient in self.ingredients) {
         [ingredientList appendFormat:@" %@",ingredient];
+        NSLog(@"%@",ingredient);
     }
 //    if ([ingredientList containsString:self.alergicIngredient]) {
         //NSLog(@"This product contains %@!",self.alergicIngredient);
