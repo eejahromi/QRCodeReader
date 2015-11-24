@@ -121,6 +121,7 @@
     NSMutableString *ingredientList = [[NSMutableString alloc]init];
     for (NSString *ingredient in self.ingredients) {
         [ingredientList appendFormat:@" %@",ingredient];
+        NSLog(@"%@",ingredient);
     }
     if ([ingredientList containsString:self.alergicIngredient]) {
         //NSLog(@"This product contains %@!",self.alergicIngredient);
