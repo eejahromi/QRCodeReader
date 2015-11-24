@@ -22,14 +22,17 @@
     AVCaptureVideoPreviewLayer *videoPreviewLayer;
     UIView *qrCodeFrameView;
     BOOL tableViewShowing;
+    __block NSString *previousUrl;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.backgroundColor = [UIColor darkGrayColor];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.hidden = YES;
+    previousUrl = [NSString string];
     
     self.information = [NSDictionary new];
     self.ingredients = [NSArray new];
@@ -75,7 +78,7 @@
     [self.view bringSubviewToFront:self.tableView];
     
     [self.messageLabel setUserInteractionEnabled:YES];
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(reloadTable:)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(reloadTable)];
     tap.numberOfTapsRequired = 2;
     [self.messageLabel addGestureRecognizer:tap];
     
@@ -85,18 +88,17 @@
     
 }
 
--(void)reloadTable:(UIGestureRecognizer *)sender{
-    tableViewShowing = YES;
-    self.tableView.frame = CGRectMake(-200.0, 0.0, 200.0, self.view.bounds.size.height - 50);
-    self.tableView.hidden = NO;
-    [UIView animateWithDuration:0.4 animations:^{
-        self.tableView.frame = CGRectMake(0.0, 0.0, 200.0, self.view.bounds.size.height - 50);
-    } completion:^(BOOL finished) {
-        [self.tableView reloadData];
-    }];
+-(void)reloadTable{
     
-    
-    
+        tableViewShowing = YES;
+        self.tableView.frame = CGRectMake(-200.0, 0.0, 200.0, self.view.bounds.size.height - 50);
+        self.tableView.hidden = NO;
+        [UIView animateWithDuration:0.4 animations:^{
+            self.tableView.frame = CGRectMake(0.0, 0.0, 200.0, self.view.bounds.size.height - 50);
+        } completion:^(BOOL finished) {
+            [self.tableView reloadData];
+        }];
+
 }
 
 -(void)dismissTable:(UIGestureRecognizer *)sender{
@@ -127,22 +129,33 @@
         // If the found metadata is equal to the QR code metadata then update the status label's text and set the bounds
         AVMetadataMachineReadableCodeObject *barCodeObject = (AVMetadataMachineReadableCodeObject *)[videoPreviewLayer transformedMetadataObjectForMetadataObject:(AVMetadataMachineReadableCodeObject *)metadataObj];
         qrCodeFrameView.frame = barCodeObject.bounds;
-        
+
+    
+    
+    
         if (metadataObj.stringValue) {
             //self.messageLabel.text = [metadataObj stringValue];
             //NSLog(@"%@",[metadataObj stringValue]);
             
             NSString *urlString = [NSString stringWithFormat:@"http://world.openfoodfacts.org/api/v0/product/%@.json",[metadataObj stringValue]];
             NSLog(@"%@",urlString);
-            NSURL *url = [NSURL URLWithString:urlString];
+            //NSString *tempUrlString = @"http://world.openfoodfacts.org/api/v0/product/737628064502.json";
+            NSString *temp2UrlString = @"http://world.openfoodfacts.org/api/v0/product/5900497610339.json";
+            NSURL *url = [NSURL URLWithString:temp2UrlString];
+            
+            if ([temp2UrlString isEqualToString:previousUrl]) {
+                return;
+            }
             
             NSURLSessionTask *task = [[NSURLSession sharedSession]dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                 self.information = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
                 self.ingredients = [[self.information objectForKey:@"product"] objectForKey:@"ingredients_tags"];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                        //[self printIngredients];
-                    self.tableView.hidden = NO;
-                    [self.tableView reloadData];
+                    [self reloadTable];
+                    previousUrl = temp2UrlString;
+                    [self printIngredients];
+                    //self.tableView.hidden = NO;
+                    //[self.tableView reloadData];
                 });
                 
             }];
@@ -150,7 +163,6 @@
             [task resume];
         }
 //    }
-    
     NSLog(@"%ld",self.information.count);
     
 }
@@ -159,14 +171,14 @@
     NSMutableString *ingredientList = [[NSMutableString alloc]init];
     for (NSString *ingredient in self.ingredients) {
         [ingredientList appendFormat:@" %@",ingredient];
-        NSLog(@"%@",ingredient);
+        //NSLog(@"%@",ingredient);
     }
 //    if ([ingredientList containsString:self.alergicIngredient]) {
         //NSLog(@"This product contains %@!",self.alergicIngredient);
-        UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Warning" message:[NSString stringWithFormat:@"This product contains %@!",self.alergicIngredient] preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
-        [controller addAction:action];
-        [self presentViewController:controller animated:YES completion:nil];
+//        UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Warning" message:[NSString stringWithFormat:@"This product contains %@!",self.alergicIngredient] preferredStyle:UIAlertControllerStyleAlert];
+//        UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+//        [controller addAction:action];
+//        [self presentViewController:controller animated:YES completion:nil];
 //    }
     self.tableView.hidden = NO;
     self.messageLabel.text = ingredientList;
@@ -179,12 +191,12 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 7;//[self.ingredients count];
+    return [self.ingredients count];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-    cell.textLabel.text = @"Test";//[self.ingredients objectAtIndex:indexPath.row];
+    cell.textLabel.text = [self.ingredients objectAtIndex:indexPath.row];
     cell.backgroundColor = [UIColor clearColor];
     cell.textLabel.textColor = [UIColor lightTextColor];
     
